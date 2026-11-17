@@ -1,0 +1,36 @@
+@import 'tailwindcss';
+
+@source '../../vendor/laravel/framework/src/Illuminate/Pagination/resources/views/*.blade.php';
+@source '../../storage/framework/views/*.php';
+
+@theme {
+    --font-sans: 'Instrument Sans', ui-sans-serif, system-ui, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji',
+        'Segoe UI Symbol', 'Noto Color Emoji';
+}
+
+/* El fondo va en el body para que cubra toda la ventana, no solo la columna */
+body {
+    margin: 0;
+    background: #F7F5F0;
+}
+
+/* El preflight de Tailwind deja los títulos sin negrita; la maqueta los usa en negrita */
+h1 {
+    font-weight: 700;
+}
+
+/* Columna única centrada: ocupa todo el ancho en móvil y se limita en pantallas grandes */
+.pantalla {
+    width: 100%;
+    max-width: 480px;
+    min-height: 100vh;
+    min-height: 100dvh;
+    margin: 0 auto;
+    box-sizing: border-box;
+    padding: 56px 24px 0;
+    background: #F7F5F0;
+    color: #1F1F1F;
+    font-family: system-ui, sans-serif;
+    display: flex;
+    flex-direction: column;
+}

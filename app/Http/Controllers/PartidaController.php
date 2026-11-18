@@ -19,20 +19,21 @@ class PartidaController extends Controller
         'tijera' => 'piedra',
     ];
 
-    public function jugar()
+    public function jugar(Request $request)
     {
-        $sugerencia = $this->pedirSugerencia();
+        $partidas = $request->user()->partidas();
+        $sugerencia = $this->pedirSugerencia($request);
 
         // La predicción se guarda para usarla cuando el jugador elija su jugada
         session(['prediccion' => $sugerencia['prediccion']]);
 
         return view('jugar', [
-            'ronda' => Partida::count() + 1,
-            'victorias' => Partida::where('resultado', 'gano')->count(),
-            'derrotas' => Partida::where('resultado', 'perdio')->count(),
+            'ronda' => $partidas->count() + 1,
+            'victorias' => $request->user()->partidas()->where('resultado', 'gano')->count(),
+            'derrotas' => $request->user()->partidas()->where('resultado', 'perdio')->count(),
             'prediccion' => $sugerencia['prediccion'],
             'comentario' => $sugerencia['comentario'],
-            'ultima' => Partida::latest('id')->first(),
+            'ultima' => $request->user()->partidas()->latest('id')->first(),
         ]);
     }
 
@@ -52,7 +53,7 @@ class PartidaController extends Controller
             ? self::LE_GANA[$prediccion]
             : self::JUGADAS[array_rand(self::JUGADAS)];
 
-        Partida::create([
+        $request->user()->partidas()->create([
             'jugada_jugador' => $validated['jugada'],
             'jugada_ia' => $jugadaIa,
             'resultado' => $this->resultado($validated['jugada'], $jugadaIa),
@@ -61,15 +62,17 @@ class PartidaController extends Controller
         return redirect()->route('jugar');
     }
 
-    public function historial()
+    public function historial(Request $request)
     {
         return view('historial', [
-            'partidas' => Partida::latest('id')->get(),
+            'partidas' => $request->user()->partidas()->latest('id')->get(),
         ]);
     }
 
     public function update(Request $request, Partida $partida)
     {
+        $this->asegurarDueno($request, $partida);
+
         $validated = $request->validate([
             'jugada_jugador' => ['required', 'in:piedra,papel,tijera'],
             'jugada_ia' => ['required', 'in:piedra,papel,tijera'],
@@ -89,11 +92,19 @@ class PartidaController extends Controller
         return redirect()->route('historial');
     }
 
-    public function destroy(Partida $partida)
+    public function destroy(Request $request, Partida $partida)
     {
+        $this->asegurarDueno($request, $partida);
+
         $partida->delete();
 
         return redirect()->route('historial');
+    }
+
+    // Cada jugador solo puede editar o borrar sus propias partidas
+    private function asegurarDueno(Request $request, Partida $partida): void
+    {
+        abort_unless((int) $partida->user_id === (int) $request->user()->id, 403);
     }
 
     private function resultado(string $jugador, string $ia): string
@@ -109,14 +120,14 @@ class PartidaController extends Controller
      * Envía el historial a Groq y devuelve la jugada que la IA cree que hará
      * el jugador junto con un comentario. Si algo falla, la predicción es null.
      */
-    private function pedirSugerencia(): array
+    private function pedirSugerencia(Request $request): array
     {
         $respaldo = [
             'prediccion' => null,
             'comentario' => 'La IA no respondió. Esta ronda jugará al azar.',
         ];
 
-        $partidas = Partida::latest('id')->take(20)->get()->reverse();
+        $partidas = $request->user()->partidas()->latest('id')->take(20)->get()->reverse();
 
         $historial = $partidas->isEmpty()
             ? 'El jugador todavía no tiene partidas.'

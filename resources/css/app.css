@@ -34,3 +34,37 @@ h1 {
     display: flex;
     flex-direction: column;
 }
+
+/* Títulos (la maqueta usa 26px, y 32px en login/registro) */
+.pantalla h1 { margin: 0; font-size: 26px; }
+.pantalla.auth h1 { font-size: 32px; }
+
+.muted { margin: 0; font-size: 14px; color: #4B4B4B; }
+
+/* Variantes de espaciado de la pantalla */
+.pantalla.auth { padding: 72px 28px 32px; gap: 20px; }
+.pantalla.stack-16 { gap: 16px; }
+.auth a { color: #2563EB; }
+
+/* Formularios */
+.field { display: flex; flex-direction: column; gap: 6px; }
+.field label { font-size: 14px; }
+.field input { height: 48px; padding: 0 14px; border: 1px solid #8A8A8A; border-radius: 8px; font-size: 16px; box-sizing: border-box; }
+.btn-primary { margin-top: 8px; height: 48px; border: none; border-radius: 8px; background: #2563EB; color: #fff; font-size: 16px; font-weight: 600; cursor: pointer; }
+.error { margin: 0; font-size: 14px; color: #B91C1C; }
+
+/* Estadísticas */
+.card { padding: 14px; background: #fff; border-radius: 12px; border: 1px solid #D6D3CC; display: flex; justify-content: space-between; align-items: center; }
+.card-col { flex-direction: column; align-items: stretch; gap: 12px; padding: 16px; }
+.stats-grid { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 10px; }
+.stat { padding: 12px; background: #fff; border: 1px solid #D6D3CC; border-radius: 12px; display: flex; flex-direction: column; gap: 4px; }
+.stat b { font-size: 26px; }
+.stat span { font-size: 13px; color: #4B4B4B; }
+.win { color: #15803D; }
+.lose { color: #B91C1C; }
+.draw { color: #4B4B4B; }
+.bar { height: 10px; background: #E7E5E4; border-radius: 6px; }
+.bar div { height: 10px; background: #2563EB; border-radius: 6px; }
+
+/* Botón pequeño (cerrar sesión) */
+.btn-sm { height: 44px; min-width: 44px; padding: 0 10px; border: 1px solid #1F1F1F; border-radius: 8px; background: #fff; font-size: 14px; cursor: pointer; display: inline-flex; align-items: center; justify-content: center; color: #1F1F1F; text-decoration: none; }

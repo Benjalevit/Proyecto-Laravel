@@ -10,6 +10,7 @@ return new class extends Migration
     {
         Schema::create('partidas', function (Blueprint $table) {
             $table->id();
+            $table->foreignId('user_id')->constrained()->cascadeOnDelete();
             $table->string('jugada_jugador');
             $table->string('jugada_ia');
             // Resultado desde el punto de vista del jugador: gano, perdio o empate

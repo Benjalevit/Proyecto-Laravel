@@ -7,13 +7,15 @@
 @vite(['resources/css/app.css', 'resources/js/app.js'])
 </head>
 <body>
-<div class="pantalla" style="gap: @yield('gap', '18px')">
+<div class="pantalla @yield('class')">
 @yield('content')
+@auth
 <nav style="margin-top: auto; height: 76px; display: flex; justify-content: space-around; align-items: center; border-top: 1px solid #D6D3CC; font-size: 14px">
 <a href="{{ route('jugar') }}" style="text-decoration: none; {{ request()->routeIs('jugar') ? 'font-weight: 700; color: #2563EB' : 'color: inherit' }}">Jugar</a>
 <a href="{{ route('historial') }}" style="text-decoration: none; {{ request()->routeIs('historial') ? 'font-weight: 700; color: #2563EB' : 'color: inherit' }}">Historial</a>
-<span>Estadísticas</span>
+<a href="{{ route('estadisticas') }}" style="text-decoration: none; {{ request()->routeIs('estadisticas') ? 'font-weight: 700; color: #2563EB' : 'color: inherit' }}">Estadísticas</a>
 </nav>
+@endauth
 </div>
 </body>
 </html>
